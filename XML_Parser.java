@@ -1,8 +1,13 @@
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -43,7 +48,30 @@ public class XML_Parser {
 	
 	//The actual assessment.xml parser
 	//Remember to check fields against fail later
-	protected static boolean parseXML(File file) {
+	protected static boolean parseXML(File xml_file, File schema_file) {
+		
+		//Check the file passed to this method exists and can be read
+		if( !xml_file.exists() || !xml_file.canRead() ) {
+			System.err.println("File does not exist or cannot be read!");
+			return false;
+		}
+		
+		//Check Schema supplied
+		if ( !schema_file.exists() || !schema_file.canRead() ) {
+			System.err.println("No valid Schema supplied.");
+			return false;
+		}
+		
+		//Validate against Schema
+		try {
+			SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			Schema schema = factory.newSchema(schema_file);
+			Validator validator = schema.newValidator();
+			validator.validate(new StreamSource(xml_file));
+		} catch ( Exception e ) {
+            System.out.println("Schema Validation Failed: " + e.getMessage());
+            return false;
+		}
 		
 		//Mandatory Setup
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -51,7 +79,7 @@ public class XML_Parser {
 		
 		try {
 			DocumentBuilder db = dbf.newDocumentBuilder();
-			dom = db.parse(file);
+			dom = db.parse(xml_file);
 		} catch (Exception e) {
 			System.err.println("Unable to parse XML file.");
 		}
