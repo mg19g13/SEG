@@ -54,9 +54,9 @@ public class GUI extends JPanel implements ActionListener {
 		loadFiles = new JButton("Load in XML files");
 		loadFiles.addActionListener(this);
 
-		buttonPanel.add(loadFiles);
 		buttonPanel.add(uploadAssessment);
 		buttonPanel.add(upLoadActivities);
+		buttonPanel.add(loadFiles);
 
 		add(buttonPanel, BorderLayout.PAGE_START);
 		add(logScrollPane, BorderLayout.CENTER);
