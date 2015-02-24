@@ -15,17 +15,18 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GUI extends JPanel implements ActionListener {
-
+//I AM A COMMENT
+	
 	// NEW ADDITION - Integer is the unique candidate ID.
 	static HashMap<Integer, Application> applications = new HashMap<Integer, Application>();
 	// NEW ADDITION - Integer is the activity ID.
 	static HashMap<Integer, Question> questions = new HashMap<Integer, Question>();
 
 	static private final String newline = "\n";
-	JButton uploadAssessment, upLoadActivities, loadFiles;
+	JButton uploadSchema, uploadAssessment, upLoadActivities, loadFiles;
 	JTextArea log;
 	JFileChooser chooser;
-	File assessmentFile, activitiesFile;
+	File schemaFile, assessmentFile, activitiesFile;
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -45,6 +46,9 @@ public class GUI extends JPanel implements ActionListener {
 		log.setEditable(false);
 		JScrollPane logScrollPane = new JScrollPane(log);
 
+		uploadSchema = new JButton("Upload a XML schema");
+		uploadSchema.addActionListener(this);
+		
 		uploadAssessment = new JButton("Upload an Assessment File");
 		uploadAssessment.addActionListener(this);
 
@@ -54,6 +58,7 @@ public class GUI extends JPanel implements ActionListener {
 		loadFiles = new JButton("Load in XML files");
 		loadFiles.addActionListener(this);
 
+		buttonPanel.add(uploadSchema);
 		buttonPanel.add(uploadAssessment);
 		buttonPanel.add(upLoadActivities);
 		buttonPanel.add(loadFiles);
@@ -71,15 +76,22 @@ public class GUI extends JPanel implements ActionListener {
 
 	}
 
-	/*public void GUIy() {
-		JPanel backPanel = new JPanel();
-		JPanel upLoadPanel = new JPanel();
-		JPanel loadPanel = new JPanel();
-
-	}*/
-
 	public void actionPerformed(ActionEvent e) {
 
+		// Takes the schema
+		if (e.getSource() == uploadSchema) {
+			int returnVal = chooser.showOpenDialog(GUI.this);
+
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				schemaFile = chooser.getSelectedFile();
+				log.append("You chose to upload this XML Schema: "
+						+ chooser.getSelectedFile().getName() + "." + newline);
+			} else {
+				log.append("Upload cancelled by user." + newline);
+			}
+			log.setCaretPosition(log.getDocument().getLength());
+		}
+		
 		// THIS TAKES THE assessment file
 		if (e.getSource() == uploadAssessment) {
 			int returnVal = chooser.showOpenDialog(GUI.this);
@@ -107,13 +119,13 @@ public class GUI extends JPanel implements ActionListener {
 			}
 			log.setCaretPosition(log.getDocument().getLength());
 		}
-
+		
 		if (e.getSource() == loadFiles) {
 			// TODO If check that both files have been uploaded
 			System.out.println("Successful parse: "
-					+ XML_Parser.parseXML(getActivitiesFile()));
+					+ XML_Parser.parseXML(getActivitiesFile(), schemaFile));
 			System.out.println("Successful parse: "
-					+ XML_Parser.parseXML(getAssessmentFile()));
+					+ XML_Parser.parseXML(getAssessmentFile(), schemaFile));
 		}
 	}
 

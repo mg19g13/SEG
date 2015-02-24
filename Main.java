@@ -21,10 +21,10 @@ public class Main {
 				
 	
 		//Obviously change to accept input from file chooser
-		System.out.println("Successful parse: " +
-		XML_Parser.parseXML(new File("C:/Users/Tom/Desktop/XML/assessment.xml")));
-		System.out.println("Successful parse: " +
-		XML_Parser.parseXML(new File("C:/Users/Tom/Desktop/XML/activities.xml")));
+	///	System.out.println("Successful parse: " +
+	//	XML_Parser.parseXML(new File("C:/Users/Tom/Desktop/XML/assessment.xml")));
+	//	System.out.println("Successful parse: " +
+	//	XML_Parser.parseXML(new File("C:/Users/Tom/Desktop/XML/activities.xml")));
 
 	}
 
